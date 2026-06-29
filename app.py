@@ -88,16 +88,16 @@ if model and preprocessor:
         try:
             # 2. Transformasi data menggunakan preprocessor pipa (Scaling & Encoding)
             input_processed = preprocessor.transform(input_data)
-st.write("### Debug - Shape hasil preprocessing")
-st.write(input_processed.shape)
+		st.write("### Debug - Shape hasil preprocessing")
+		st.write(input_processed.shape)
 		
             
             # 3. Prediksi menggunakan model optimal hasil Minggu 3
             prediction = model.predict(input_processed)[0]
-prediction_proba = model.predict_proba(input_processed)[0]
+		prediction_proba = model.predict_proba(input_processed)[0]
 
-st.write("### Debug - Raw Probability")
-st.write(prediction_proba)
+		st.write("### Debug - Raw Probability")
+		st.write(prediction_proba)
             
             st.markdown("---")
             st.subheader("🔮 Hasil Analisis & Prediksi Model")
