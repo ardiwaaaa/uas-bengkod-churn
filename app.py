@@ -86,73 +86,73 @@ if model and preprocessor:
         st.dataframe(input_data)
         
         try:
-    # 2. Transformasi data menggunakan preprocessor (Scaling & Encoding)
-    input_processed = preprocessor.transform(input_data)
+            # 2. Transformasi data menggunakan preprocessor (Scaling & Encoding)
+            input_processed = preprocessor.transform(input_data)
 
-    # ==========================
-    # DEBUG
-    # ==========================
-    st.write("### Debug - Shape hasil preprocessing")
-    st.write(input_processed.shape)
+            # ==========================
+            # DEBUG
+            # ==========================
+            st.write("### Debug - Shape hasil preprocessing")
+            st.write(input_processed.shape)
 
-    # 3. Prediksi menggunakan model
-    prediction = model.predict(input_processed)[0]
-    prediction_proba = model.predict_proba(input_processed)[0]
+            # 3. Prediksi menggunakan model
+            prediction = model.predict(input_processed)[0]
+            prediction_proba = model.predict_proba(input_processed)[0]
 
-    st.write("### Debug - Raw Probability")
-    st.write(prediction_proba)
+            st.write("### Debug - Raw Probability")
+            st.write(prediction_proba)
 
-    st.markdown("---")
-    st.subheader("🔮 Hasil Analisis & Prediksi Model")
+            st.markdown("---")
+            st.subheader("🔮 Hasil Analisis & Prediksi Model")
 
-    # Membagi layout visual menjadi 2 kolom
-    col1, col2 = st.columns(2)
+            # Membagi layout visual menjadi 2 kolom
+            col1, col2 = st.columns(2)
 
-    with col1:
-        if prediction == 1:
-            st.error("🚨 HASIL PREDIKSI: BERPOTENSI CHURN (PERGI)")
-            st.metric(
-                label="Status Risiko",
-                value="Tinggi (Churn)",
-                delta="Perlu Intervensi Segera",
-                delta_color="inverse"
+            with col1:
+                if prediction == 1:
+                    st.error("🚨 HASIL PREDIKSI: BERPOTENSI CHURN (PERGI)")
+                    st.metric(
+                        label="Status Risiko",
+                        value="Tinggi (Churn)",
+                        delta="Perlu Intervensi Segera",
+                        delta_color="inverse"
+                    )
+                else:
+                    st.success("✅ HASIL PREDIKSI: TETAP BERLANGGANAN (LOYAL)")
+                    st.metric(
+                        label="Status Risiko",
+                        value="Rendah (Loyal)",
+                        delta="Pertahankan Layanan",
+                        delta_color="normal"
+                    )
+
+            with col2:
+                st.write("**Keyakinan Model (Probability Score):**")
+                st.write(f"• Probabilitas Tetap Setia (0): `{prediction_proba[0] * 100:.2f}%`")
+                st.write(f"• Probabilitas Akan Churn (1): `{prediction_proba[1] * 100:.2f}%`")
+
+                # Visualisasi tingkat risiko churn
+                st.progress(float(prediction_proba[1]))
+
+            # Rekomendasi Bisnis
+            st.markdown("### 💡 Rekomendasi Tindakan Bisnis:")
+
+            if prediction == 1:
+                st.info(
+                    "👉 **Strategi Retensi:** Kirimkan email penawaran khusus, "
+                    "berikan voucher diskon loyalitas, atau hubungi customer service "
+                    "untuk survei kepuasan guna mencegah pelanggan benar-benar pergi."
+                )
+            else:
+                st.info(
+                    "👉 **Strategi Retensi:** Masukkan pelanggan ke program loyalitas "
+                    "reguler dan tawarkan produk pelengkap (cross-selling/upselling) "
+                    "karena retensi mereka terpantau stabil."
+                )
+
+        except Exception as e:
+            st.error(f"❌ Terjadi kesalahan dalam pemrosesan data: {e}")
+            st.warning(
+                "Catatan: Pastikan urutan dan nama kolom input sama persis dengan "
+                "fitur yang digunakan saat melatih model."
             )
-        else:
-            st.success("✅ HASIL PREDIKSI: TETAP BERLANGGANAN (LOYAL)")
-            st.metric(
-                label="Status Risiko",
-                value="Rendah (Loyal)",
-                delta="Pertahankan Layanan",
-                delta_color="normal"
-            )
-
-    with col2:
-        st.write("**Keyakinan Model (Probability Score):**")
-        st.write(f"• Probabilitas Tetap Setia (0): `{prediction_proba[0] * 100:.2f}%`")
-        st.write(f"• Probabilitas Akan Churn (1): `{prediction_proba[1] * 100:.2f}%`")
-
-        # Visualisasi tingkat risiko churn
-        st.progress(float(prediction_proba[1]))
-
-    # Rekomendasi Bisnis
-    st.markdown("### 💡 Rekomendasi Tindakan Bisnis:")
-
-    if prediction == 1:
-        st.info(
-            "👉 **Strategi Retensi:** Kirimkan email penawaran khusus, "
-            "berikan voucher diskon loyalitas, atau hubungi customer service "
-            "untuk survei kepuasan guna mencegah pelanggan benar-benar pergi."
-        )
-    else:
-        st.info(
-            "👉 **Strategi Retensi:** Masukkan pelanggan ke program loyalitas "
-            "reguler dan tawarkan produk pelengkap (cross-selling/upselling) "
-            "karena retensi mereka terpantau stabil."
-        )
-
-except Exception as e:
-    st.error(f"❌ Terjadi kesalahan dalam pemrosesan data: {e}")
-    st.warning(
-        "Catatan: Pastikan urutan dan nama kolom input sama persis dengan "
-        "fitur yang digunakan saat melatih model."
-    )
